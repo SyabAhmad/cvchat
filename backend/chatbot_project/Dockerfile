@@ -22,11 +22,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy all backend files into container
 COPY . .
 
-# Collect static files (you can skip this if not needed)
+# Run database migrations
+RUN python manage.py migrate || echo "Migration failed (likely due to missing DB during build)"
+
+# Collect static files (skip errors if no static config)
 RUN python manage.py collectstatic --noinput || true
 
 # Expose port for Railway
 EXPOSE 8000
 
 # Start the Django app using Gunicorn
-CMD ["gunicorn", "chatbot_project.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn chatbot_project.wsgi:application --bind 0.0.0.0:8000"]
