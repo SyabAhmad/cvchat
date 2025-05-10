@@ -3,8 +3,7 @@ import CVUpload from './components/CVUpload';
 import ChatInterface from './components/ChatInterface';
 import CVList from './components/CVList';
 import './App.css';
-
-const API_BASE_URL = 'http://localhost:8000';
+import { API_BASE_URL } from './config/api';
 
 function App() {
   const [cvs, setCVs] = useState([]);
